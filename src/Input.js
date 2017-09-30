@@ -1,7 +1,14 @@
+import { deltaTime } from './time'
+
 class InputClass {
-    constructor({ left = 'a', forward = 'w', right = 'd', back = 's' } = {}){
+    // Sensitivity works best if it's between 1 and 10
+    constructor({ left = 'a', forward = 'w', right = 'd', back = 's', sensitivity = 5 } = {}){
         this.keys = {};
         this.axis = {
+            horizontal: 0,
+            vertical: 0
+        }
+        this.rawAxis = {
             horizontal: 0,
             vertical: 0
         }
@@ -11,6 +18,9 @@ class InputClass {
             right: right,
             back: back
         }
+
+        this.max = 100;
+        this.sensitivity = Math.ceil(sensitivity); // Sensitivity cannot be a decimal
 
         window.addEventListener('keydown', (e) => {
             this.keys[e.key] = true;
@@ -23,52 +33,75 @@ class InputClass {
 
     getAxis(axis){
         if(axis && typeof axis === 'string'){
-            const currentAxis = this.axis[axis.toLowerCase()] / 100;
-            return currentAxis;
+            return this.axis[axis.toLowerCase()] / 100;
         }
-        
+    }
+
+    getRawAxis(axis){
+        if(axis && typeof axis === 'string'){
+            return this.rawAxis[axis.toLowerCase()];
+        }
     }
 
     update(){
-        if(this.axis.vertical>0){
-            this.axis.vertical-=5;
+        const climbRate = this.max * this.sensitivity; // Climb rate per second
+        const fallRate = climbRate / 2; // Fall rate per second
+
+        let verticalAxis = this.axis.vertical;
+        let horizontalAxis = this.axis.horizontal;
+
+        if(verticalAxis>0){
+            verticalAxis-= (fallRate * deltaTime);
         }
-        else if(this.axis.vertical<0){
-            this.axis.vertical+=5;
+        else if(verticalAxis<0){
+            verticalAxis+=(fallRate * deltaTime);
         }
 
-        if(this.axis.horizontal>0){
-            this.axis.horizontal-=5;
+        if(horizontalAxis>0){
+            horizontalAxis-=(fallRate * deltaTime);
         }
-        else if(this.axis.horizontal<0){
-            this.axis.horizontal+=5;
+        else if(horizontalAxis<0){
+            horizontalAxis+=(fallRate * deltaTime);
         }
 
         if(this.keys[this.defaultKeys.left]){
-            this.axis.horizontal -= 10;
+            this.rawAxis.horizontal = -1;
+            horizontalAxis -= (climbRate * deltaTime);
         }
-        if(this.keys[this.defaultKeys.right]){
-            this.axis.horizontal += 10;
+        else if(this.keys[this.defaultKeys.right]){
+            this.rawAxis.horizontal = 1;
+            horizontalAxis += (climbRate * deltaTime);
+        }
+        else {
+            this.rawAxis.horizontal = 0;
         }
         if(this.keys[this.defaultKeys.forward]){
-            this.axis.vertical += 10;
+            this.rawAxis.vertical = 1;
+            verticalAxis += (climbRate * deltaTime);
         }
-        if(this.keys[this.defaultKeys.back]){
-            this.axis.vertical -= 10;
+        else if(this.keys[this.defaultKeys.back]){
+            this.rawAxis.vertical = -1;
+            verticalAxis -= (climbRate * deltaTime);
+        }
+        else {
+            this.rawAxis.vertical = 0;
         }
 
-        if(this.axis.horizontal > 100){
-            this.axis.horizontal = 100;
+        if(horizontalAxis > this.max){
+            horizontalAxis = this.max;
         }
-        else if(this.axis.horizontal < -100){
-            this.axis.horizontal = -100;
+        else if(horizontalAxis < -this.max){
+            horizontalAxis = -this.max;
         }
-        if(this.axis.vertical > 100){
-            this.axis.vertical = 100;
+        if(verticalAxis > this.max){
+            verticalAxis = this.max;
         }
-        else if(this.axis.vertical < -100){
-            this.axis.vertical = -100;
+        else if(verticalAxis < -this.max){
+            verticalAxis = -this.max;
         }
+
+        this.axis.vertical = Math.round(verticalAxis);
+        this.axis.horizontal = Math.round(horizontalAxis);
     }
 }
 

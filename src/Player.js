@@ -7,12 +7,14 @@ class Player extends Entity {
         super({ x, y, rotation });
         this.rotationSpeed = 130;
         this.speed = 0;
-        this.moveSpeed = 100;
+        this.moveSpeed = 50;
     }
 
     update(){
         super.update();
         let rotation;
+
+        console.log(Input.getAxis('horizontal'), Input.getAxis('vertical'));
 
         this.speed = (Input.getAxis('vertical') * this.moveSpeed) * deltaTime;
         this.rotation += (Input.getAxis('horizontal') * this.rotationSpeed) * deltaTime;

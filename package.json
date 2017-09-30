@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "main": "index.js",
   "scripts": {
-    "watch": "webpack --watch",
-    "build": "webpack"
+    "watch": "npm run open && webpack --watch",
+    "build": "webpack",
+    "open": "open ./dist/index.html"
   },
   "author": "Calin Reimer",
   "license": "MIT",
