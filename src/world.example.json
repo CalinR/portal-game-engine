@@ -1,0 +1,52 @@
+{
+    "name": "World 1",
+    "sectors": [
+        {
+            "id": 1,
+            "floor": 0,
+            "ceiling": 10,
+            "vertices": [
+                {
+                    "x": 20,
+                    "y": 50,
+                    "neighbour": -1
+                },
+                {
+                    "x": 50,
+                    "y": 20,
+                    "neighbour": -1
+                },
+                {
+                    "x": 150,
+                    "y": 20,
+                    "neighbour": -1
+                },
+                {
+                    "x": 180,
+                    "y": 50,
+                    "neighbour": 1
+                },
+                {
+                    "x": 180,
+                    "y": 150,
+                    "neighbour": -1
+                },
+                {
+                    "x": 150,
+                    "y": 180,
+                    "neighbour": -1
+                },
+                {
+                    "x": 50,
+                    "y": 180,
+                    "neighbour": -1
+                },
+                {
+                    "x": 20,
+                    "y": 150,
+                    "neighbour": -1
+                }
+            ]
+        }
+    ]
+}

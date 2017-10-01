@@ -1,29 +1,30 @@
 import Entity from './Entity'
 import Input from './Input';
-import { deltaTime } from './time'
+import Engine from './Engine'
+import Collider from './Collider'
 
 class Player extends Entity {
-    constructor({ x, y, rotation }){
-        super({ x, y, rotation });
+    constructor({ x, y, rotation, tag }){
+        super({ x, y, rotation, tag });
         this.rotationSpeed = 130;
         this.speed = 0;
         this.moveSpeed = 50;
+        this.input = new Input();
+        this.collider = new Collider();
     }
 
     update(){
         super.update();
         let rotation;
 
-        console.log(Input.getAxis('horizontal'), Input.getAxis('vertical'));
-
-        this.speed = (Input.getAxis('vertical') * this.moveSpeed) * deltaTime;
-        this.rotation += (Input.getAxis('horizontal') * this.rotationSpeed) * deltaTime;
+        this.speed = (this.input.getAxis('vertical') * this.moveSpeed) * Engine.deltaTime;
+        this.rotation += (this.input.getAxis('horizontal') * this.rotationSpeed) * Engine.deltaTime;
 
         const moveX = Math.cos(this.radians) * this.speed;
         const moveY = Math.sin(this.radians) * this.speed;
 
-        this.x += moveX * deltaTime;
-        this.y += moveY * deltaTime;
+        this.x += moveX;
+        this.y += moveY;
     }
 }
 
