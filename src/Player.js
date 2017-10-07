@@ -2,6 +2,7 @@ import Entity from './Entity'
 import Input from './Input';
 import Engine from './Engine'
 import Collider from './Collider'
+import Vector3 from './math/Vector3'
 
 class Player extends Entity {
     constructor({ x, y, rotation, tag }){
@@ -14,17 +15,9 @@ class Player extends Entity {
     }
 
     update(){
-        super.update();
-        let rotation;
-
-        this.speed = (this.input.getAxis('vertical') * this.moveSpeed) * Engine.deltaTime;
+        const speed = (this.input.getAxis('vertical') * this.moveSpeed) * Engine.deltaTime;
         this.rotation += (this.input.getAxis('horizontal') * this.rotationSpeed) * Engine.deltaTime;
-
-        const moveX = Math.cos(this.radians) * this.speed;
-        const moveY = Math.sin(this.radians) * this.speed;
-
-        this.x += moveX;
-        this.y += moveY;
+        this.velocity = new Vector3(0, 0, speed);
     }
 }
 

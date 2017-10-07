@@ -1,15 +1,16 @@
 import Engine from './Engine'
 import debug from './utils/debug'
+import Vector3 from './math/Vector3'
 
 class Entity {
-    constructor({ x = 0, y = 0, rotation = 0, tag = null, collider = null } = {}){
+    constructor({ x = 0, y = 0, rotation = 0, tag = null, velocity = new Vector3 } = {}){
         this.id = Entity.incrementId();
         this.x = x;
         this.y = y;
+        this.velocity = velocity;
         this.size = 4;
         this._rotation = rotation;
-        this.components = [];
-        this.collider = collider;
+        this._components = [];
         this.tag = tag;
         this.currentSector = null;
         debug.log(`Created: Entity #${ this.id }`);
@@ -39,7 +40,22 @@ class Entity {
         return this.rotation * Math.PI / 180;
     }
 
-    update(){
+    get components(){
+        return this._components;
+    }
+
+    addComponent(component){
+        component.parent = this;
+        this._components.push(component);
+    }
+
+    updateCycle(){
+        this.beforeUpdate();
+        this.update();
+        this.afterUpdate();
+    }
+
+    beforeUpdate(){
         if(!this.currentSector){
             const sector = Engine.findSector(this.x, this.y);
             if(sector){
@@ -47,13 +63,20 @@ class Entity {
                 debug.log(`Found Active Sector: Entity #${ this.id }`);
             }
         }
-        this.components.forEach((component) => {
+    }
+
+    update(){
+        
+    }
+
+    // This happens after update. Do collision checks here.
+    afterUpdate(){
+        this._components.forEach((component) => {
             component.update();
         })
 
-        if(this.collider){
-            this.collider.update(this);
-        }
+        this.x += (this.velocity.z * Math.cos(this.radians));
+        this.y += (this.velocity.z * Math.sin(this.radians));
     }
 }
 

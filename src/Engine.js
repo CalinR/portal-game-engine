@@ -26,7 +26,17 @@ class Engine {
                 const top = sector.vertices.map(el => el.y).reduce(findMin);
                 const bottom = sector.vertices.map(el => el.y).reduce(findMax);
 
-                // Return new sector object with bounding box
+                let walls = [];
+
+                sector.vertices.forEach((vertex, index) => {
+                    const nextVertex = (index < sector.vertices.length - 1 ? sector.vertices[index+1] : sector.vertices[0]);
+                    walls.push([
+                        vertex,
+                        nextVertex
+                    ]);
+                })
+
+                // Return new sector object with bounding box and list of walls
                 return {
                     ...sector,
                     boundingBox: {
@@ -34,12 +44,19 @@ class Engine {
                         right: right,
                         top: top,
                         bottom: bottom
-                    }
+                    },
+                    walls
                 }
+            }).sort((a, b) => {
+                return a.id - b.id;
             })
         };
 
         debug.log(`Loaded Map: ${ world.name }`);
+    }
+
+    getSectorById(id){
+        return this.world.sectors[id-1];
     }
 
     findSector(x, y){

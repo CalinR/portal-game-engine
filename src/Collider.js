@@ -1,22 +1,22 @@
-let colliders = [];
+import Component from './Component'
+import Engine from './Engine'
 
-class Collider {
-    constructor({ tag = null, parent = null } = {}){
-        this.tag = tag;
-        this.parent = null;
-        colliders.push(this);
+export default class Collider extends Component {
+    constructor(){
+        super();
     }
 
-    update(parent){
-        this.updateParent(parent);
-        
-    }
+    update(){
+        super.update();
+        if(this.parent.currentSector){
+            const sector = Engine.getSectorById(this.parent.currentSector);
 
-    updateParent(parent){
-        if(!this.parent && parent){
-            this.parent = parent;
+            sector.walls.forEach((wall) => {
+                // console.log(wall);
+            })
+            // console.log(this.parent.currentSector, sector);
+
+            // console.log('has sector');
         }
     }
 }
-
-export default Collider;

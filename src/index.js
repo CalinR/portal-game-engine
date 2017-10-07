@@ -5,12 +5,17 @@ const canvas = document.getElementById('game');
 const context = canvas.getContext('2d');
 const width = canvas.width;
 const height = canvas.height;
-const player = new Player({ x: 10, y: 10, rotation: 30 });
+import Collider from './Collider'
+const player = new Player({ x: 100, y: 125, rotation: 30 });
+
+player.addComponent(new Collider);
 
 Engine.loadWorld(world);
 
+// player.updateCycle();
+
 Engine.onUpdate(() => {
-    player.update();
+    player.updateCycle();
     drawMap();
 })
 
