@@ -3,10 +3,11 @@ import debug from './utils/debug'
 import Vector3 from './math/Vector3'
 
 class Entity {
-    constructor({ x = 0, y = 0, rotation = 0, tag = null, velocity = new Vector3 } = {}){
+    constructor({ x = 0, y = 0, z = 0, rotation = 0, tag = null, velocity = new Vector3 } = {}){
         this.id = Entity.incrementId();
         this.x = x;
         this.y = y;
+        this.z = z;
         this.velocity = velocity;
         this.size = 4;
         this._rotation = rotation;
@@ -69,14 +70,13 @@ class Entity {
         
     }
 
-    // This happens after update. Do collision checks here.
     afterUpdate(){
         this._components.forEach((component) => {
             component.update();
         })
 
-        this.x += (this.velocity.z * Math.cos(this.radians));
-        this.y += (this.velocity.z * Math.sin(this.radians));
+        this.x += this.velocity.x;
+        this.y += this.velocity.y;
     }
 }
 
